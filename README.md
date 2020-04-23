@@ -1,4 +1,5 @@
 # vue-02-todo
+Simple todo application to test concept like: routing, components, computed and events
 
 ## Project setup
 ```
