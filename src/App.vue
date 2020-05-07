@@ -18,20 +18,19 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
-  data() {
-    //bad practice will refactor later when learn vuex
-    this.$root.$on("task-count", function(eventData) {
-      var data = this.$children[0].$data;
-      data.all_tasks = eventData.all;
-      data.all_active = eventData.active;
-      data.all_completed = eventData.completed;
-    });
-    return {
-      all_tasks: 10,
-      all_active: 5,
-      all_completed: 3
-    };
+  computed: {
+    ...mapGetters(["getTasks", "getCompletedTasks", "getActiveTasks"]),
+    all_tasks: function() {
+      return this.getTasks.length;
+    },
+    all_active: function() {
+      return this.getActiveTasks.length;
+    },
+    all_completed: function() {
+      return this.getCompletedTasks.length;
+    }
   }
 };
 </script>

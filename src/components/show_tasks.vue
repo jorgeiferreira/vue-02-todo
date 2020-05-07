@@ -1,17 +1,17 @@
 <template>
   <div>
     <div v-for="task in filteredTasks" :key="task.id">
-      <Task :task="task" @deletetask="deleteTask" />
+      <Task :task="task" @deletetask="deleteTaskAsync" />
     </div>
   </div>
 </template>
 
 <script>
 import Task from "./task.vue";
-import Vue from "vue";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
-  props: ["value", "filter"],
+  props: ["filter"],
   components: {
     Task
   },
@@ -21,33 +21,19 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["getTasks", "getCompletedTasks", "getActiveTasks"]),
     filteredTasks: function() {
-      var all_tasks = this.tasks;
-
-      var completed_tasks = this.tasks.filter(x => x.completed === true);
-
-      var active_tasks = this.tasks.filter(x => x.completed === false);
-      //bad practice will refactor later when learn vuex
-      this.$root.$emit("task-count", {
-        all: all_tasks.length,
-        completed: completed_tasks.length,
-        active: active_tasks.length
-      });
-
       if (this.filter === "completed") {
-        return completed_tasks;
+        return this.getCompletedTasks;
       } else if (this.filter === "active") {
-        return active_tasks;
+        return this.getActiveTasks;
       } else {
-        return all_tasks;
+        return this.getTasks;
       }
     }
   },
   methods: {
-    deleteTask: function(event) {
-      var index = this.tasks.indexOf(event);
-      Vue.delete(this.tasks, index);
-    }
+    ...mapActions(["deleteTaskAsync"])
   }
 };
 </script>
